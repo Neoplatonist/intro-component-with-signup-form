@@ -64,7 +64,7 @@
       text-align: center;
     }
 
-    .contact-trial-btn {
+    .contact-trial-ad {
       width: 100%;
       margin-top: 4em;
       padding: 18px 55px;
@@ -72,12 +72,13 @@
       font-size: 1.55rem;
       line-height: 1.7;
       color: white;
+      text-align: center;
       border: 0;
       border-radius: 10px;
       box-shadow: 0px 8px 1.5px 0px rgba(0,0,0,0.15);
     }
 
-    .contact-trial-btn b {
+    .contact-trial-ad b {
       font-weight: 700;
     }
 
@@ -112,6 +113,11 @@
       text-transform: uppercase;
       border-radius: 5px;
       box-shadow: 0px -4px 1.5px 0px rgba(0,0,0,0.1) inset;
+    }
+
+    .contact-submit-btn:hover {
+      background-color: hsl(154, 59%, 64%);
+      cursor: pointer;
     }
 
     .contact-terms {
@@ -159,9 +165,9 @@
     </header>
 
     <main>
-      <button class="contact-trial-btn">
+      <section class="contact-trial-ad">
         <b>Try it free 7 days</b> then $20/mo. thereafter
-      </button>
+      </section>
 
       <form class="contact-form" autocomplete="on">
         <input type="text" name="first-name" id="first-name" placeholder="First Name" autocomplete="given-name" />
