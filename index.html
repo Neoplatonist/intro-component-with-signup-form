@@ -1,42 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- displays site properly based on user's device -->
 
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
 
   <title>Frontend Mentor | Intro component with sign up form</title>
 
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
   <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
+    :root {
+      --primary-red: hsl(0, 100%, 74%);
+      --primary-green: hsl(154, 59%, 51%);
+      --accent-blue: hsl(248, 32%, 49%);
+      --neutral-dark-blue: hsl(249, 10%, 26%);
+      --neutral-gray-blue: hsl(246, 25%, 77%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    html {
+      min-height: 100vh;
+      font-size: 62.5%;
+    }
+
+    body {
+      height: 100%;
+      font-size: 1.6rem;
+      background-color: var(--primary-red);
+      background-image: url(images/bg-intro-mobile.png);
+    }
+
+    .contact {
+      margin: 0 6.5%;
+    }
+
+    .contact-heading {
+      margin: 3.3em auto 0 auto;
+      font-size: 2.7rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: white;
+      text-align: center;
+    }
+
+    .contact-description {
+      margin-top: 1.4em;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 1.63;
+      color: whitesmoke;
+      text-align: center;
+    }
+
+    .contact-trial-btn {
+      width: 100%;
+      margin-top: 4em;
+      padding: 18px 55px;
+      background-color: var(--accent-blue);
+      font-size: 1.55rem;
+      line-height: 1.7;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      box-shadow: 0px 8px 1.5px 0px rgba(0,0,0,0.15);
+    }
+
+    .contact-trial-btn b {
+      font-weight: 700;
+    }
+
+    .contact-form {
+      margin-top: 1.5em;
+      padding: 1.5em;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0px 8px 1.5px 0px rgba(0,0,0,0.15);
+    }
+
+    .contact-form input {
+      width: 100%;
+      margin-bottom: 1.15em;
+      padding: 0 1.2em;
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 5.45rem;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 5px;
+    }
+
+    .contact-submit-btn {
+      width: 100%;
+      padding: 1.1em 0;
+      border: none;
+      background-color: var(--primary-green);
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+      border-radius: 5px;
+      box-shadow: 0px -4px 1.5px 0px rgba(0,0,0,0.1) inset;
+    }
+
+    .contact-terms {
+      display: block;
+      width: 100%;
+      margin-top: 0.8em;
+      padding: 0 20px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 2;
+      color: var(--neutral-gray-blue);
+    }
+
+    .contact-terms a {
+      text-decoration: none;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--primary-red);
+    }
+
+    .attribution {
+      width: 100%;
+      margin-top: 3em;
+      margin-bottom: 2em;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
   </style>
 </head>
+
 <body>
+  <div class="contact">
+    <header>
+      <h1 class="contact-heading">Learn to code by watching others</h1>
 
-  Learn to code by watching others
+      <p class="contact-description">
+        See how experienced developers solve problems in real-time.
+        Watching scripted tutorials is great, but understanding how developers think is invaluable.
+      </p>
+    </header>
 
-  See how experienced developers solve problems in real-time. Watching scripted tutorials is great,
-  but understanding how developers think is invaluable.
+    <main>
+      <button class="contact-trial-btn">
+        <b>Try it free 7 days</b> then $20/mo. thereafter
+      </button>
 
-  Try it free 7 days then $20/mo. thereafter
+      <form class="contact-form" autocomplete="on">
+        <input type="text" name="first-name" id="first-name" placeholder="First Name" autocomplete="given-name" />
+        <input type="text" name="last-name" id="last-name" placeholder="Last Name" autocomplete="family-name" />
+        <input type="email" name="email" id="email" placeholder="Email Address" autocomplete="email" />
+        <input type="password" name="password" id="password" placeholder="Password" autocomplete="current-password" />
 
-  First Name
-  Last Name
-  Email Address
-  Password
+        <button class="contact-submit-btn">Claim your free trial</button>
 
-  Claim your free trial
+        <sub class="contact-terms">
+          By clicking the button, you are agreeing to our <a href="#terms-and-services">Terms and Services</a>
+        </sub>
+      </form>
+    </main>
+  </div>
 
-  By clicking the button, you are agreeing to our Terms and Services
+  <p class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
+    Coded by <a href="https://joshfjohnston.com">Neoplatonist</a>.
+  </p>
 
-  <footer>
-    <p class="attribution">
-      Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
-      Coded by <a href="#">Your Name Here</a>.
-    </p>
-  </footer>
+  <script>
+    const errors = {
+      emptyInput: fieldName => `${fieldName} cannot be empty`,
+      invalidEmail: 'Looks like this is not an email'
+    }
+
+    const state = {}
+
+    // TODO:
+    // Receive an error message when the form is submitted if:
+    //    - Any input field is empty. The message for this error should say "[Field Name] cannot be empty"
+    //    - The email address is not formatted correctly (i.e. a correct email address should have this structure: name@host.tld). The message for this error should say "Looks like this is not an email"
+
+    // keep track of error state
+    // email regexp:
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp
+    // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+    // [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?
+
+  </script>
 </body>
+
 </html>
