@@ -42,6 +42,17 @@
       background-image: url(images/bg-intro-mobile.png);
     }
 
+    .error {
+      display: block;
+      margin-top: 0.6em;
+      margin-bottom: 1.3em;
+      font-size: 1.2rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--primary-red);
+      text-align: right;
+    }
+
     .contact {
       margin: 0 6.5%;
     }
@@ -92,11 +103,11 @@
 
     .contact-form input {
       width: 100%;
-      margin-bottom: 1.15em;
       padding: 0 1.2em;
       font-size: 1.4rem;
       font-weight: 600;
       line-height: 5.45rem;
+      color: var(--neutral-dark-blue);
       border: 1px solid rgba(0,0,0,0.15);
       border-radius: 5px;
     }
@@ -150,6 +161,11 @@
     .attribution a {
       color: hsl(228, 45%, 44%);
     }
+
+    input.invalid, input.invalid:focus {
+      border: 2px solid var(--primary-red);
+      outline-color: var(--primary-red);
+    }
   </style>
 </head>
 
@@ -169,11 +185,19 @@
         <b>Try it free 7 days</b> then $20/mo. thereafter
       </section>
 
-      <form class="contact-form" autocomplete="on">
-        <input type="text" name="first-name" id="first-name" placeholder="First Name" autocomplete="given-name" />
-        <input type="text" name="last-name" id="last-name" placeholder="Last Name" autocomplete="family-name" />
-        <input type="email" name="email" id="email" placeholder="Email Address" autocomplete="email" />
-        <input type="password" name="password" id="password" placeholder="Password" autocomplete="current-password" />
+      <form id="trial-form" class="contact-form" autocomplete="on">
+        <input type="text" name="first-name" id="first-name" placeholder="First Name" autocomplete="given-name" minlength="3" maxlength="35"  />
+        <span class="error" aria-live="polite"></span>
+
+        <input type="text" name="last-name" id="last-name" placeholder="Last Name" autocomplete="family-name" minlength="3" maxlength="35" required />
+        <span class="error" aria-live="polite"></span>
+
+        <!-- https://stackoverflow.com/questions/51931539/input-type-email-limit-local-part-max-length -->
+        <input type="email" name="email" id="email" placeholder="Email Address" autocomplete="email" minlength="5" maxlength="65" required />
+        <span class="error" aria-live="polite"></span>
+
+        <input type="password" name="password" id="password" placeholder="Password" autocomplete="current-password" minlength="8" maxlength="16" required />
+        <span class="error" aria-live="polite"></span>
 
         <button class="contact-submit-btn">Claim your free trial</button>
 
@@ -190,12 +214,22 @@
   </p>
 
   <script>
+    const debug = true
+    const log = value => debug ? console.log(value) : null
+    const info = value => debug ? console.info(value) : null
+
+    const form = document.getElementById("trial-form")
+    const firstName = document.getElementById("first-name")
+    const lastName = document.getElementById("last-name")
+    const email = document.getElementById("email")
+    const password = document.getElementById("password")
+
     const errors = {
       emptyInput: fieldName => `${fieldName} cannot be empty`,
       invalidEmail: 'Looks like this is not an email'
     }
 
-    const state = {}
+    const valid = {}
 
     // TODO:
     // Receive an error message when the form is submitted if:
@@ -207,6 +241,153 @@
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp
     // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
     // [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?
+
+    function capitalize(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1)
+    }
+
+    function addClassInvalid(input) {
+      input.classList.add('invalid')
+    }
+
+    function removeClassInvalid(input) {
+      input.classList.remove('invalid')
+    }
+
+    function cleanError(input) {
+      info('cleanError')
+      const nextSibling = input.nextElementSibling
+      log({nextSibling})
+      nextSibling.textContent = ''
+    }
+
+    function handleError(input) {
+      info('handling error')
+      if (input.classList.contains('invalid')) {
+        // element already has class invalid
+        // so no need to complete this function
+        log('invalid class already exists')
+        return
+      }
+
+      let nextSibling = input.nextElementSibling
+
+      if (input.name === 'email') {
+        nextSibling.textContent = errors.invalidEmail
+        log('error is email')
+      } else {
+        nextSibling.textContent = errors.emptyInput(capitalize(input.name))
+        log('error is input')
+      }
+
+      log('handleError: error content', nextSibling.textContent)
+    }
+
+    function checkInputLength(input) {
+      info('checkInputLength')
+      log({checkInputValidity: !input.reportValidity()})
+      log({checkInputLength: input.value.trim().length === 0})
+      if (input.value.trim().length === 0 || !input.reportValidity()) {
+        log({inputLengthError: true})
+        handleError(input)
+        addClassInvalid(input) // has to be after handleError
+        return false
+      }
+
+      // Ensure the invalid class is not active
+      removeClassInvalid(input)
+      cleanError(input)
+
+      log({inputLengthError: false})
+      return true
+    }
+
+    function isEmailValid(email) {
+      info('isEmailValid')
+      const emailRegExp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+      const emailTest = email.reportValidity()
+        && checkInputLength(email)
+        && emailRegExp.test(email.value)
+
+      log({emailTest})
+      log({emailValidity: email.validity.valid})
+      log({emailLength: checkInputLength(email)})
+      log({emailRegexp: emailRegExp.test(email.value)})
+
+      if (!emailTest) {
+        handleError(email)
+        addClassInvalid(email) // has to be after handleError
+        return false
+      }
+
+      // Ensure the invalid class is not active
+      removeClassInvalid(email)
+      cleanError(email)
+
+      // handleError(email)
+      return true
+    }
+
+    form.addEventListener('input', event => {
+      info('form input event listener')
+      if (event.target === event.currentTarget || event.target.nodeName !== "INPUT") {
+        return
+      }
+
+      switch (event.target.name) {
+        case 'first-name':
+          const isFirstName = checkInputLength(event.target)
+          valid['isFirstName'] = isFirstName
+          break
+
+        case 'last-name':
+          const isLastName = checkInputLength(event.target)
+          valid['isLastName'] = isLastName
+          break
+
+        case 'email':
+          const isEmail = isEmailValid(event.target)
+          valid['isEmail'] = isEmail
+          break
+
+        case 'password':
+          const isPassword = checkInputLength(event.target)
+          valid['isPassword'] = isPassword
+
+        default:
+          break
+      }
+
+        log({valid})
+        log(email.classList)
+
+      event.stopPropagation()
+    })
+
+    // https://caniuse.com/constraint-validation
+    // https://developer.mozilla.org/en-US/docs/Web/API/Constraint_validation
+    form.addEventListener('submit', event => {
+      event.preventDefault()
+      info('clicked submit')
+
+      const submit = Object.keys(valid).reduce((prev, curr) => {
+        log({reducerPrev: prev})
+        log({reducerCurr: curr})
+        const v = prev && valid[curr] ? true : false
+        log({reducer: v})
+        return v
+      }, true)
+
+
+      log(submit)
+
+      if (submit) {
+        alert('Thank you for your interest! We will get back to you as soon as possible!')
+        log('form submitted')
+      } else {
+        log('form submission failed')
+      }
+    })
 
   </script>
 </body>
